@@ -44,4 +44,9 @@ fn finalize_event(){
     let event_id = contract_dispatcher.create_event('first event',1,2);
 
     contract_dispatcher.finalize_event(event_id,1);
+    let (outcome1, outcome2, is_finalized, winning_outcome) = contract_dispatcher.get_event(event_id); 
+
+    assert(is_finalized == true, 'event not finalized');
+    assert(winning_outcome == 1, 'event not finalized');
+    // println!("event details : {:?}", event_details);
 }
