@@ -13,7 +13,8 @@ mod PredictionMarket {
     use starknet::get_caller_address;
     use starknet::ContractAddress;
     use starknet::storage::{
-        StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map,Vec
+        StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map,Vec,
+        VecTrait, MutableVecTrait
     };
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
@@ -89,7 +90,7 @@ mod PredictionMarket {
             let struct_to_hash = StructForBetHash {event_id : event_id, bettor : bettor };
             let bet_id = PoseidonTrait::new().update_with(struct_to_hash).finalize();
             self.bets.entry(bet_id).write((bettor, selected_outcome, amount));
-            self.event_bets.entry(event_id).push(bet_id);
+            self.event_bets.entry(event_id).append().write(bet_id);
             self.emit(BetPlaced { bet_id, event_id, bettor, selected_outcome, amount });
             bet_id
         }
