@@ -2,8 +2,6 @@ use starknet::ContractAddress;
 
 use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 
-use prediction_market::PredictionMarket::IPredictionMarketSafeDispatcher;
-use prediction_market::PredictionMarket::IPredictionMarketSafeDispatcherTrait;
 use prediction_market::PredictionMarket::IPredictionMarketDispatcher;
 use prediction_market::PredictionMarket::IPredictionMarketDispatcherTrait;
 
@@ -14,8 +12,6 @@ fn deploy_contract(name: ByteArray) -> ContractAddress {
 }
 
 #[test]
-
-// create event
 fn create_event(){
     let contract_address = deploy_contract("PredictionMarket");
     let contract_dispatcher = IPredictionMarketDispatcher { contract_address};
@@ -25,4 +21,12 @@ fn create_event(){
     // println!("event id : {:?}",event);
 }
 
+#[test]
+fn place_bet(){
+    let contract_address = deploy_contract("PredictionMarket");
+    let contract_dispatcher = IPredictionMarketDispatcher { contract_address};
+    contract_dispatcher.create_event('first event',1,2);
 
+    let betId = contract_dispatcher.place_bet(1,1,10);
+    println!("bet id : {:?}", betId);
+}
