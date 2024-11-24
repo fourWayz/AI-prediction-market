@@ -1,4 +1,3 @@
-use starknet::ContractAddress;
 
 #[starknet::interface]
 pub trait IPredictionMarket<TContractState> {
@@ -14,7 +13,7 @@ mod PredictionMarket {
     use starknet::ContractAddress;
     use starknet::storage::{
         StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map,Vec,
-        VecTrait, MutableVecTrait
+        MutableVecTrait
     };
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
