@@ -1,9 +1,13 @@
 use starknet::ContractAddress;
-
 use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
-
 use prediction_market::PredictionMarket::IPredictionMarketDispatcher;
 use prediction_market::PredictionMarket::IPredictionMarketDispatcherTrait;
+
+#[derive(Drop, Hash)]
+struct StructForBetHash{
+    event_id : felt252,
+    bettor : ContractAddress
+}
 
 fn deploy_contract(name: ByteArray) -> ContractAddress {
     let contract = declare(name).unwrap().contract_class();
