@@ -113,7 +113,8 @@ mod PredictionMarket {
         }
 
         fn get_event(ref self : ContractState, event_id : felt252)->(felt252, felt252, bool, felt252){
-
+            let (outcome1, outcome2, is_finalized, winning_outcome) = self.events.entry(event_id).read();
+            (outcome1, outcome2, is_finalized, winning_outcome)
         }
 
         fn claim_reward(ref self: ContractState, bet_id: felt252) -> bool {
