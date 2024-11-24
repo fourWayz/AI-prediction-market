@@ -11,9 +11,12 @@ pub trait IPredictionMarket<TContractState> {
 #[starknet::contract]
 mod PredictionMarket {
     use starknet::get_caller_address;
+    use starknet::ContractAddress;
     use starknet::storage::{
         StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry, Map,
     };
+    use core::poseidon::PoseidonTrait;
+    use core::hash::{HashStateTrait, HashStateExTrait};
 
     #[storage]
     struct Storage {
@@ -61,6 +64,12 @@ mod PredictionMarket {
         amount: u64,
     }
 
+    #[derive(Drop, Hash)]
+    struct StructForBetHash{
+        event_id : felt252,
+        bettor : ContractAddress
+    }
+
     #[constructor]
     fn constructor(ref self: ContractState) {
     }
@@ -77,7 +86,8 @@ mod PredictionMarket {
 
         fn place_bet(ref self: ContractState, event_id: felt252, selected_outcome: felt252, amount: u64) -> felt252 {
             let bettor = get_caller_address();
-            let bet_id = hash2(event_id, bettor);
+            let bet_id = PoseidonTrait::new().update_with(event_id,bettor).finalize();
+            // let bet_id = hash2(event_id, bettor);
             self.bets.entry(bet_id).write((bettor, selected_outcome, amount));
             self.event_bets.entry(event_id).push(bet_id);
             self.emit(BetPlaced { bet_id, event_id, bettor, selected_outcome, amount });
