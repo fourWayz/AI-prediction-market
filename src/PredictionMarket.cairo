@@ -5,6 +5,7 @@ pub trait IPredictionMarket<TContractState> {
     fn place_bet(ref self: TContractState, event_id: felt252, selected_outcome: felt252, amount: u64) -> felt252;
     fn finalize_event(ref self: TContractState, event_id: felt252, winning_outcome: felt252);
     fn claim_reward(ref self: TContractState, bet_id: felt252) -> bool;
+    fn get_event(ref self : TContractState, event_id : felt252)->(felt252, felt252, bool, felt252);
 }
 
 #[starknet::contract]
@@ -109,6 +110,10 @@ mod PredictionMarket {
 
             self.events.entry(event_id).write((outcome1, outcome2, true, winning_outcome));
             self.emit(EventFinalized { event_id, winning_outcome });
+        }
+
+        fn get_event(ref self : ContractState, event_id : felt252)->(felt252, felt252, bool, felt252){
+
         }
 
         fn claim_reward(ref self: ContractState, bet_id: felt252) -> bool {

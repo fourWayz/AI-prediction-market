@@ -22,7 +22,6 @@ fn create_event(){
     let event_id = contract_dispatcher.create_event('first event',1,2);
 
     assert(event_id == 1, 'error creating event');
-    // println!("event id : {:?}",event);
 }
 
 #[test]
@@ -33,4 +32,13 @@ fn place_bet(){
 
     let betId = contract_dispatcher.place_bet(1,1,10);
     println!("bet id : {:?}", betId);
+}
+
+#[test]
+fn finalize_event(){
+    let contract_address = deploy_contract("PredictionMarket");
+    let contract_dispatcher = IPredictionMarketDispatcher { contract_address};
+    let event_id = contract_dispatcher.create_event('first event',1,2);
+
+    contract_dispatcher.finalize_event(event_id,1);
 }
