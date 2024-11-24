@@ -22,6 +22,9 @@ fn create_event(){
     let event_id = contract_dispatcher.create_event('first event',1,2);
 
     assert(event_id == 1, 'error creating event');
+    
+    let event_details = contract_dispatcher.get_event(event_id); 
+    println!("event details : {:?}", event_details);
 }
 
 #[test]
