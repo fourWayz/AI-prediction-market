@@ -71,6 +71,12 @@ mod PredictionMarket {
         bettor : ContractAddress
     }
 
+    #[derive(Drop, Hash)]
+    struct StructForEventHash{
+        bet_Id : felt252,
+        bettor : ContractAddress
+    }
+
     #[constructor]
     fn constructor(ref self: ContractState) {
     }
@@ -99,8 +105,8 @@ mod PredictionMarket {
             let (outcome1, outcome2, is_finalized, _) = self.events.entry(event_id).read();
 
             // Ensure event is not already finalized and the winning outcome is valid
-            assert(is_finalized == false, "Event already finalized");
-            assert(winning_outcome == outcome1 || winning_outcome == outcome2, "Invalid outcome");
+            assert(is_finalized == false, 'Event already finalized');
+            assert(winning_outcome == outcome1 || winning_outcome == outcome2, 'Invalid outcome');
 
             self.events.entry(event_id).write((outcome1, outcome2, true, winning_outcome));
             self.emit(EventFinalized { event_id, winning_outcome });
@@ -108,12 +114,13 @@ mod PredictionMarket {
 
         fn claim_reward(ref self: ContractState, bet_id: felt252) -> bool {
             let (bettor, selected_outcome, amount) = self.bets.entry(bet_id).read();
-            let event_id = hash2(bet_id, bettor);
+            let struct_to_hash = StructForEventHash {bet_Id : bet_id, bettor : bettor };
+            let event_id = PoseidonTrait::new().update_with(struct_to_hash).finalize();
             let (_, _, is_finalized, winning_outcome) = self.events.entry(event_id).read();
 
             // Ensure the event is finalized and the selected outcome matches the winning outcome
-            assert(is_finalized == true, "Event not finalized");
-            assert(selected_outcome == winning_outcome, "Incorrect outcome");
+            assert(is_finalized == true, 'Event not finalized');
+            assert(selected_outcome == winning_outcome, 'Incorrect outcome');
 
             // Reward payout logic (to be implemented as per your token model)
             self.emit(RewardClaimed { bet_id, bettor, amount });
