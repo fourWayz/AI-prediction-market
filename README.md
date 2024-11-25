@@ -1,4 +1,4 @@
-```markdown
+
 # AI Prediction Market DApp
 
 This project is an AI-powered Prediction Market decentralized application (dApp) built on StarkNet. It allows users to create events, place bets on outcomes, and claim rewards based on event results, with predictions powered by OpenAI's language model for additional insights.
