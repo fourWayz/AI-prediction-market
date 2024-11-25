@@ -21,7 +21,7 @@ async function main() {
 
   try {
     ({ sierraCode, casmCode } = await getCompiledCode(
-      "prediction_market"
+      "prediction_market_PredictionMarket"
     ));
   } catch (error: any) {
     console.log("Failed to read contract files");
