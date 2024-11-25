@@ -48,5 +48,6 @@ fn finalize_event(){
 
     assert(is_finalized == true, 'event not finalized');
     assert(winning_outcome == 1, 'event not finalized');
-    // println!("event details : {:?}", event_details);
 }
+
+

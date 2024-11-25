@@ -1,4 +1,5 @@
 
+use starknet::ContractAddress;
 #[starknet::interface]
 pub trait IPredictionMarket<TContractState> {
     fn create_event(ref self: TContractState, event_name: felt252, outcome1: felt252, outcome2: felt252) -> felt252;
@@ -6,6 +7,7 @@ pub trait IPredictionMarket<TContractState> {
     fn finalize_event(ref self: TContractState, event_id: felt252, winning_outcome: felt252);
     fn claim_reward(ref self: TContractState, bet_id: felt252) -> bool;
     fn get_event(ref self : TContractState, event_id : felt252)->(felt252, felt252, bool, felt252);
+    fn get_bet(ref self : TContractState, betId : felt252)->(ContractAddress,felt252,u64);
 }
 
 #[starknet::contract]
@@ -101,6 +103,11 @@ mod PredictionMarket {
             bet_id
         }
 
+        fn get_bet(ref self : ContractState, betId : felt252)->(ContractAddress,felt252,u64){
+           let (bettor, selected_outcome, amount) = self.bets.entry(betId).read();
+           (bettor, selected_outcome, amount)
+        }
+
         fn finalize_event(ref self: ContractState, event_id: felt252, winning_outcome: felt252) {
             let (outcome1, outcome2, is_finalized, _) = self.events.entry(event_id).read();
 
@@ -127,7 +134,7 @@ mod PredictionMarket {
             assert(is_finalized == true, 'Event not finalized');
             assert(selected_outcome == winning_outcome, 'Incorrect outcome');
 
-            // Reward payout logic (to be implemented as per your token model)
+            // Reward payout logic (to be implemented..)
             self.emit(RewardClaimed { bet_id, bettor, amount });
             true
         }
